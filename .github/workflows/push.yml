@@ -1,0 +1,47 @@
+on: push
+name: Build and Publish
+jobs:
+  acceptanceTestAuth:
+    name: Acceptance Test Auth
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Acceptance Test Auth
+      uses: ./auth
+      env:
+        GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
+    - name: Acceptance Test CLI
+      uses: ./cli
+      env:
+        GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
+      with:
+        args: auth list --filter no-such-account
+    - name: Test
+      uses: actions/action-builder/shell@master
+      with:
+        entrypoint: make
+        args: test
+    - name: Lint
+      uses: actions/action-builder/shell@master
+      with:
+        entrypoint: make
+        args: lint
+    - name: Build
+      uses: actions/action-builder/docker@master
+      with:
+        entrypoint: make
+        args: build
+    - name: Publish Filter
+      uses: actions/bin/filter@master
+      with:
+        args: branch master
+    - name: Docker Login
+      uses: actions/docker/login@master
+      env:
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+    - name: Publish
+      uses: actions/action-builder/docker@master
+      with:
+        entrypoint: make
+        args: publish

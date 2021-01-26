@@ -8,16 +8,19 @@ The GitHub Actions for [Google Cloud Platform](https://cloud.google.com/) and wr
 
 An example workflow to authenticate with Google Cloud Platform:
 
-```
-workflow "Run gcloud Login" {
-  on = "push"
-  resolves = "Setup Google Cloud"
-}
-
-action "Setup Google Cloud" {
-  uses = "actions/gcloud/auth@master"
-  secrets = ["GCLOUD_AUTH"]
-}
+```yml
+on: push
+name: Run gcloud Login
+jobs:
+  setupGoogleCloud:
+    name: Setup Google Cloud
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Setup Google Cloud
+      uses: actions/gcloud/auth@master
+      env:
+        GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
 ```
 
 Subsequent actions in the workflow will then be able to use `gcloud` as that user ([see `cli` for examples](/cli)).

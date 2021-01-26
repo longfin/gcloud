@@ -1,13 +1,7 @@
-# GitHub Actions for Google Cloud Platform
+# Deprecated
 
-This repository contains GitHub Actions for [Google Cloud Platform](https://cloud.google.com/), for performing common tasks such as authorizing and tagging containers, as well as a generic `cli` for doing arbitrary actions with the [Google cloud SDK](https://cloud.google.com/sdk/) command-line client.
+This action has been deprecated in favor of https://github.com/GoogleCloudPlatform/github-actions.  This repo has been archived and will be made private on 12/31/2019
 
-## Usage
-
-Usage information for individual commands can be found in their respective directories.
-
-* [`cli`](/cli)
-* [`auth`](/auth)
 
 ## License
 

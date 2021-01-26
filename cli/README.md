@@ -5,22 +5,23 @@ The GitHub Actions for [Google Cloud Platform](https://cloud.google.com/) and wr
 ## Usage
 An example workflow to list clusters on Google Cloud Platform:
 
-```
-workflow "Run gcloud command" {
-  on = "push"
-  resolves = "GCP List Clusters"
-}
-
-action "GCP Authenticate" {
-  uses = "actions/gcloud/auth@master"
-  secrets = ["GCLOUD_AUTH"]
-}
-
-action "GCP List Clusters" {
-  needs = ["GCP Authenticate"]
-  uses = "actions/gcloud/cli@master"
-  args = "container clusters list"
-}
+```yml
+on: push
+name: Run gcloud command
+jobs:
+  GCPAuthenticate:
+    name: GCP Authenticate
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: GCP Authenticate
+      uses: actions/gcloud/auth@master
+      env:
+        GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
+    - name: GCP List Clusters
+      uses: actions/gcloud/cli@master
+      with:
+        args: container clusters list
 ```
 
 For more information about the authentication step, [see `auth`](/auth).
